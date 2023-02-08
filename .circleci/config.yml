@@ -23,7 +23,7 @@ jobs:
             make install
             # Install hadolint to lint Dockerfile
             wget -O /bin/hadolint https://github.com/hadolint/hadolint/releases/download/v1.16.3/hadolint-Linux-x86_64 
-            
+
             chmod +x /bin/hadolint
 
       - save_cache:
@@ -50,6 +50,21 @@ jobs:
       - run:
           name: Create Container Image
           command: |
+            cat /etc/os-release
+            sudo apt update
+            sudo apt install apt-transport-https ca-certificates curl software-properties-common
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+            sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+            apt-cache policy docker-ce
+            sudo apt install docker-ce
+            sudo systemctl status docker
+            sudo usermod -aG docker ${USER}
+            su - ${USER}
+            groups
+            sudo usermod -aG docker ${USER}
+            newgrp ${USER}
+
+            # build app docker image
             docker build -t sklearn-app:v1.0.0 .
             docker tag sklearn-app:v1.0.0 peterhuynh99/projectapp:v1.0.0
             docker push peterhuynh99/projectapp:v1.0.0
