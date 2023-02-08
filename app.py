@@ -1,8 +1,8 @@
-from flask import (
-    Flask,
-    request,
-    jsonify
-)
+# from flask import (
+#     Flask,
+#     request,
+#     jsonify
+# )
 from flask.logging import create_logger
 import logging
 
@@ -26,7 +26,7 @@ def scale(payload):
 
 @app.route("/")
 def home():
-    html = f"<h3>Hello, My name is Peter Huynh</h3>"
+    html = "<h3>Hello, My name is Peter Huynh</h3>"
     return html.format(format)
 
 @app.route("/predict", methods=['POST'])
