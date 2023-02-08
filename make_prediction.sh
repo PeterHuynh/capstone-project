@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-PORT=8000
-#PORT=8888
+PORT=5555
 
 echo "Port: $PORT"
 

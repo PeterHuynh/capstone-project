@@ -37,7 +37,7 @@ jobs:
             . venv/bin/activate
             make lint           
       - run:
-          name: Run Pytest
+          name: Run Unit Test
           command: |
             . venv/bin/activate
             make test           
