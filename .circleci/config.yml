@@ -47,11 +47,11 @@ jobs:
     steps:
       - checkout
       - run:
-        name: Create Container Image
-        command: |
-          docker build -t sklearn-app:v1.0.0 .
-          docker tag sklearn-app:v1.0.0 peterhuynh99/projectapp:v1.0.0
-          docker push peterhuynh99/projectapp:v1.0.0
+          name: Create Container Image
+          command: |
+            docker build -t sklearn-app:v1.0.0 .
+            docker tag sklearn-app:v1.0.0 peterhuynh99/projectapp:v1.0.0
+            docker push peterhuynh99/projectapp:v1.0.0
 
 workflows:
   default:
