@@ -1,7 +1,7 @@
 
 ## Project Overview
 
-This is my Cloud DevOps Capstone Project. The application is deployed in AWS EKS automatically by CircleCI using Cloudformation.
+This is my Cloud DevOps Capstone Project. The infrastructure EKS cluster in AWS automatically by CircleCI using Cloudformation and the containerized app is deployed and running in eks kubernetes cluster.
 
 ---
 
@@ -10,7 +10,7 @@ This is my Cloud DevOps Capstone Project. The application is deployed in AWS EKS
 *  Lauching AWS Infrastruture such as CircleCI, VPC, EC2, ECS, EKS
 
 ## Configuration and Deployment
-*  Using Circle CI to implement Continuous Integration and Continuous  Deployment
+* Using Circle CI to implement Continuous Integration and Continuous  Deployment
 * Building pipelines
 * Using Ansible and CloudFormation to deploy clusters
 * Building Kubernetes clusters
