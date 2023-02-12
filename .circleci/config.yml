@@ -101,7 +101,7 @@ jobs:
       - run: 
           name: Create EC2 Server
           command: |
-            aws cloudformation create-stack --stack-name ec2-server-backend --template-body file://.circleci/files/backend.yml --parameters file://.circleci/files/backend_parameters.json --region us-west-2
+            aws cloudformation create-stack --stack-name pf-cf-ec2-server --template-body file://.circleci/files/server.yml --parameters file://.circleci/files/server_parameters.json --region us-west-2
 
 workflows:
   default:
