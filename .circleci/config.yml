@@ -68,10 +68,33 @@ jobs:
             docker build -t peterhuynh99/projectapp:${TAG} .
             docker login --username ${DOCKERHUB_USERNAME} --password ${DOCKERHUB_PASSWORD}
             docker push peterhuynh99/projectapp:${TAG}
+  
+  create_aws_infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run: 
+          name: Create AWS Infrastructure
+          command: |
+            aws cloudformation create-stack --stack-name ph-cf-infra-${CIRCLE_WORKFLOW_ID:0:7} --template-body file://cfn_network_infra.yml --parameters file://cfn_network_infra_parameters.json  --region us-west-2 
+  
+  delete_aws_infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run: 
+          name: Delete AWS Infrastructure
+          command: |
+            aws cloudformation delete-stack --stack-name ph-cf-infra-${CIRCLE_WORKFLOW_ID:0:7} --region us-west-2 
+
+
 
 workflows:
   default:
     jobs:
-      - build
+      # - build
       # - create_image:
       #     requires: [build]
+      - create_aws_infrastructure
