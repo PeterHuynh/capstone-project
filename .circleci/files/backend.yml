@@ -1,6 +1,17 @@
 Description: >
   server backend.
 
+Parameters:
+  EnvironmentName:
+    Description: "PH CICD"
+    Type: String
+  AMItoUse:
+    Description: "Amazon Linux AMI"
+    Type: String
+  InstanceType:
+    Description: "Instance type to use"
+    Type: String
+
 Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
