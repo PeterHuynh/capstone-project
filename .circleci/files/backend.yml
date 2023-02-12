@@ -40,7 +40,7 @@ Resources:
       KeyName: phuynh-cicd-ec2
       ImageId: !Ref AMItoUse
       SubnetId: 
-        - Fn::ImportValue: !Sub "${EnvironmentName}-PUB1-SN"
+        - Fn::ImportValue: !Sub ${EnvironmentName}-PUB1-SN
       Tags:
         - Key: Name
           Value: qa-ec2-cicd
