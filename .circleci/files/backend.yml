@@ -1,0 +1,26 @@
+Description: >
+  server backend.
+
+Resources:
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: Qa-Cicd-Sg
+      GroupDescription: Allow port 22.
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0       
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      SecurityGroups:
+        - Ref: InstanceSecurityGroup
+      KeyName: phuynh-cicd-ec2
+      ImageId: ami-0d31d7c9fc9503726
+      Tags:
+        - Key: Name
+          Value: qa-ec2-cicd

@@ -74,15 +74,15 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run:
+          name: install tar gzip packages
+          command: |
+            yum -y install tar gzip
       - run: 
           name: Create AWS Infrastructure
           command: |
-            aws cloudformation create-stack --stack-name ph-cf-network-infra --template-body file://cfn_network_infra.yml --parameters file://cfn_network_infra_parameters.json  --region us-west-2 
+            aws cloudformation create --stack-name ph-cf-network-infra --template-body file://cfn_network_infra.yml --parameters file://cfn_network_infra_parameters.json  --region us-west-2             
 
-            sleep 30
-
-            aws cloudformation describe-stacks --stack-name ph-cf-network-infra --region us-west-2
-  
   delete_aws_infrastructure:
     docker:
       - image: amazon/aws-cli
@@ -91,9 +91,17 @@ jobs:
       - run: 
           name: Delete AWS Infrastructure
           command: |
-            aws cloudformation delete-stack --stack-name ph-cf-network-infra --region us-west-2 
-
-
+            aws cloudformation delete-stacks --stack-name ph-cf-network-infra --region us-west-2 
+  
+  create_ec2_deployment_server:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run: 
+          name: Create EC2 Server
+          command: |
+            aws cloudformation deploy --stack-name "c2-server-backend" --template-file .circleci/files/backend.yml --tags qa=cicd  --region us-west-2
 
 workflows:
   default:
@@ -102,3 +110,4 @@ workflows:
       # - create_image:
       #     requires: [build]
       - create_aws_infrastructure
+      - create_ec2_deployment_server
