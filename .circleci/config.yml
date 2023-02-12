@@ -81,7 +81,7 @@ jobs:
       - run: 
           name: Create AWS Infrastructure
           command: |
-            aws cloudformation create --stack-name ph-cf-network-infra --template-body file://cfn_network_infra.yml --parameters file://cfn_network_infra_parameters.json  --region us-west-2             
+            aws cloudformation create-stack --stack-name ph-cf-network-infra --template-body file://cfn_network_infra.yml --parameters file://cfn_network_infra_parameters.json  --region us-west-2             
 
   delete_aws_infrastructure:
     docker:
@@ -110,4 +110,5 @@ workflows:
       # - create_image:
       #     requires: [build]
       - create_aws_infrastructure
-      - create_ec2_deployment_server
+      - create_ec2_deployment_server:
+          requires: [create_aws_infrastructure]
