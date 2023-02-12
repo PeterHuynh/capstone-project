@@ -10,7 +10,7 @@
   {
     "ParameterKey": "InstanceType",
     "ParameterValue": "t3.small"
-  }
+  },
   {
     "ParameterKey": "PublicSubnet-01",
     "ParameterValue": "qa-PUB1-SN"
