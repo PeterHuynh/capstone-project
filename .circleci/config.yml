@@ -109,6 +109,7 @@ workflows:
       # - build
       # - create_image:
       #     requires: [build]
-      - create_aws_infrastructure
-      - create_ec2_deployment_server:
-          requires: [create_aws_infrastructure]
+      # - create_aws_infrastructure
+      # - create_ec2_deployment_server:
+      #     requires: [create_aws_infrastructure]
+      - create_ec2_deployment_server
