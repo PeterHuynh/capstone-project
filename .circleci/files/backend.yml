@@ -5,22 +5,31 @@ Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupName: Qa-Cicd-Sg
+      GroupName: SG-CICD
       GroupDescription: Allow port 22.
+      VpcId:
+        Fn::ImportValue: !Sub "${EnvironmentName}-VPCID"
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 22
           ToPort: 22
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 65535
           CidrIp: 0.0.0.0/0       
 
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: t2.micro
+      InstanceType: !Ref InstanceType
       SecurityGroups:
         - Ref: InstanceSecurityGroup
       KeyName: phuynh-cicd-ec2
-      ImageId: ami-0d31d7c9fc9503726
+      ImageId: !Ref AMItoUse
+      SubnetId: 
+        - Fn::ImportValue: !Sub "${EnvironmentName}-PUB1-SN"
       Tags:
         - Key: Name
           Value: qa-ec2-cicd

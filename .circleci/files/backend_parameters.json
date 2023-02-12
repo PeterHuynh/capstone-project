@@ -1,0 +1,14 @@
+[
+  {
+    "ParameterKey": "EnvironmentName",
+    "ParameterValue": "qa"
+  },
+  {
+    "ParameterKey": "AMItoUse",
+    "ParameterValue": "ami-0530ca8899fac469f"
+  },
+  {
+    "ParameterKey": "InstanceType",
+    "ParameterValue": "t3.small"
+  }
+]
