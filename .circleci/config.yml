@@ -103,6 +103,52 @@ jobs:
           command: |
             aws cloudformation create-stack --stack-name ph-cf-ec2-server --template-body file://.circleci/files/server.yml --parameters file://.circleci/files/server_parameters.json --region us-west-2
 
+      - run:
+          name: Retrieve EC2 server ip and add to ansible inventory
+          command: |
+            echo "" > inventory.txt
+            echo [ec2] > inventory.txt            
+            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=qa-ec2-cicd" --output text >> .circleci/ansible/inventory.txt
+
+      - run:
+          name: Check inventory file content
+          command: cat .circleci/ansible/inventory.txt
+      
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
+  
+  delete_ec2_deployment_server:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run: 
+          name: Delete AWS Infrastructure
+          command: |
+            aws cloudformation delete-stacks --stack-name ph-cf-ec2-server --region us-west-2 
+
+  configure_ec2_deployment_server:
+    docker:
+      - image: python:3.11-rc-alpine
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["5a:ef:53:88:90:cb:f4:43:bc:61:9f:db:64:b5:62:c5"]
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install ansible dependencies
+          command: |
+            apk add --update ansible
+            pip install awscli --upgrade
+      - run:
+          name: Configure server
+          command: |
+            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
+
+
 workflows:
   default:
     jobs:
@@ -112,4 +158,7 @@ workflows:
       # - create_aws_infrastructure
       # - create_ec2_deployment_server:
       #     requires: [create_aws_infrastructure]
+      - delete_ec2_deployment_server
       - create_ec2_deployment_server
+      - configure_ec2_deployment_server:
+          requires: [create_ec2_deployment_server]
