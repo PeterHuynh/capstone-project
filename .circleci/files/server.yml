@@ -14,6 +14,7 @@ Parameters:
   PublicSubnet1CIDR:
     Description: "Public Subnet to use"
     Type: String  
+    Default: qa-PUB1-SN
 
 Resources:
   InstanceSecurityGroup:
