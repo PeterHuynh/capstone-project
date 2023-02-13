@@ -159,6 +159,6 @@ workflows:
       # - create_ec2_deployment_server:
       #     requires: [create_aws_infrastructure]
       # - delete_ec2_deployment_server          
-      - create_ec2_deployment_server:          
+      - create_ec2_deployment_server          
       - configure_ec2_deployment_server:
           requires: [create_ec2_deployment_server]
