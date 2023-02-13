@@ -98,6 +98,11 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run:
+          name: install tar gzip packages
+          command: |
+            yum -y install tar gzip
+            
       - run: 
           name: Create EC2 Server
           command: |
