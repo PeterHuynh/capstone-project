@@ -18,8 +18,7 @@ Parameters:
 Resources:
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupName: SG-CICD
+    Properties:      
       GroupDescription: Allow port 22.
       VpcId:
         Fn::ImportValue: !Sub "${EnvironmentName}-VPCID"
@@ -42,8 +41,7 @@ Resources:
         - Ref: InstanceSecurityGroup
       KeyName: phuynh-cicd-ec2
       ImageId: !Ref AMItoUse
-      # SubnetId: 
-      #   - Fn::ImportValue: !Sub "${EnvironmentName}-PUB1-SN"
+      SubnetId: "subnet-0351bb8e31f5f313d"      
       
       Tags:
         - Key: Name
