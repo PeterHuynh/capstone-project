@@ -105,7 +105,7 @@ jobs:
 
       - run:
           name: Sleep 2 mins waiting for EC2 Boot
-          no_output_timeout: 2m
+          no_output_timeout: 5m
           command: |
             date
             sleep 2m
