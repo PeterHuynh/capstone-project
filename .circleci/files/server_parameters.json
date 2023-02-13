@@ -13,7 +13,7 @@
   },
   {
     "ParameterKey": "PublicSubnet1CIDR",
-    "ParameterValue": "10.0.0.0/24"
+    "ParameterValue": "qa-PUB1-SN"
   }
 ]
 
