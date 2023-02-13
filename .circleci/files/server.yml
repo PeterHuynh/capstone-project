@@ -10,10 +10,10 @@ Parameters:
     Type: String
   InstanceType:
     Description: "Instance type to use"
-    Type: String
-  PublicSubnet01:
-    Description: "Instance Puclic Subnet 01"
-    Type: String
+    Type: String  
+  PublicSubnet1CIDR:
+    Description: "Public Subnet to use"
+    Type: String  
 
 Resources:
   InstanceSecurityGroup:
@@ -41,8 +41,7 @@ Resources:
         - Ref: InstanceSecurityGroup
       KeyName: phuynh-cicd-ec2
       ImageId: !Ref AMItoUse
-      SubnetId: "subnet-0351bb8e31f5f313d"      
-      
+      SubnetId: !Ref PublicSubnet1CIDR
       Tags:
         - Key: Name
           Value: qa-ec2-cicd

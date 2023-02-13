@@ -12,8 +12,8 @@
     "ParameterValue": "t3.small"
   },
   {
-    "ParameterKey": "PublicSubnet01",
-    "ParameterValue": "qa Public Subnet (AZ1)"
+    "ParameterKey": "PublicSubnet1CIDR",
+    "ParameterValue": "10.0.0.0/24"
   }
 ]
 
