@@ -38,7 +38,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: !Ref InstanceType
-      SecurityGroups:
+      SecurityGroupIds:
         - Ref: InstanceSecurityGroup
       KeyName: phuynh-cicd-ec2
       ImageId: !Ref AMItoUse
