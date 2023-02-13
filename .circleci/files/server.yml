@@ -11,10 +11,6 @@ Parameters:
   InstanceType:
     Description: "Instance type to use"
     Type: String  
-  PublicSubnet1CIDR:
-    Description: "Public Subnet to use"
-    Type: String  
-    Default: qa-PUB1-SN
 
 Resources:
   InstanceSecurityGroup:
@@ -42,7 +38,8 @@ Resources:
         - Ref: InstanceSecurityGroup
       KeyName: phuynh-cicd-ec2
       ImageId: !Ref AMItoUse
-      SubnetId: !Ref PublicSubnet1CIDR
+      SubnetId:
+        Fn::ImportValue: !Sub "${EnvironmentName}-PUB1-SN" 
       Tags:
         - Key: Name
           Value: qa-ec2-cicd
