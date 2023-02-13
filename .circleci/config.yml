@@ -102,7 +102,7 @@ jobs:
           name: install tar gzip packages
           command: |
             yum -y install tar gzip
-            
+
       - run: 
           name: Create EC2 Server
           command: |
@@ -159,6 +159,7 @@ jobs:
       - run:
           name: Configure server
           command: |
+            cat .circleci/ansible/inventory.txt
             ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
 
 
