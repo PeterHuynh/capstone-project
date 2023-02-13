@@ -104,11 +104,18 @@ jobs:
             aws cloudformation create-stack --stack-name ph-cf-ec2-server --template-body file://.circleci/files/server.yml --parameters file://.circleci/files/server_parameters.json --region us-west-2
 
       - run:
+          name: Sleep 2 mins waiting for EC2 Boot
+          no_output_timeout: 2m
+          command: |
+            date
+            sleep 2m
+
+      - run:
           name: Retrieve EC2 server ip and add to ansible inventory
           command: |
             echo "" > inventory.txt
             echo [ec2] > inventory.txt            
-            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=qa-ec2-cicd" --output text >> .circleci/ansible/inventory.txt
+            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=qa-ec2-cicd" --output text >> .circleci/ansible/inventory.txt --region us-west-2 
 
       - run:
           name: Check inventory file content
