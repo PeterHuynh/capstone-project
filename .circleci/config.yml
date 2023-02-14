@@ -272,7 +272,7 @@ workflows:
       # - create_ec2_deployment_server:
       #     requires: [create_aws_infrastructure]      
       # - create_ec2_deployment_server          
-      - attach_role_to_ec2_server:
+      - attach_role_to_ec2_server
       #   requires: [create_ec2_deployment_server]
       # - configure_ec2_deployment_server:
       #     requires: [attach_role_to_ec2_server]      
