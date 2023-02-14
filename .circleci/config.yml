@@ -197,7 +197,7 @@ jobs:
             ansible-inventory -v --list -i .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
             ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/create_eks_cluster.yml    
-     - run:
+      - run:
           name: Sleep 25 mins waiting for EKS Custer Ready!.
           no_output_timeout: 50m
           command: |
