@@ -121,7 +121,7 @@ jobs:
           command: |
             echo "" > inventory.txt
             echo [ec2] > inventory.txt            
-            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=qa-ec2-cicd" --output text >> .circleci/ansible/inventory.txt --region us-west-2 
+            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=qa-server-cicd" --output text >> .circleci/ansible/inventory.txt --region us-west-2 
 
       - run:
           name: Check inventory file content
@@ -172,7 +172,7 @@ jobs:
       - run: 
           name: Get instance id and attach pre-defined role 
           command: |            
-            instance_id=`aws ec2 describe-instances --filters   "Name=tag:Name,Values=qa-ec2-cicd" --query Reservations[*].Instances[*].InstanceId --output text --region us-west-2`
+            instance_id=`aws ec2 describe-instances --filters   "Name=tag:Name,Values=qa-server-cicd" --query Reservations[*].Instances[*].InstanceId --output text --region us-west-2`
 
             aws ec2 associate-iam-instance-profile --instance-id ${instance_id} --iam-instance-profile Name=phuynh-cicd --region us-west-2
 
@@ -271,7 +271,7 @@ workflows:
       # - create_aws_infrastructure
       # - create_ec2_deployment_server:
       #     requires: [create_aws_infrastructure]      
-      #- create_ec2_deployment_server          
+      - create_ec2_deployment_server          
       - attach_role_to_ec2_server
       #   requires: [create_ec2_deployment_server]
       # - configure_ec2_deployment_server:
