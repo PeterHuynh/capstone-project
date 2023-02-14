@@ -156,9 +156,11 @@ jobs:
           command: |
             apk add --update ansible
             pip install awscli --upgrade
+            ansible --version
       - run:
           name: Configure server
           command: |
+            ansible-inventory -v --list -i .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
             ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/configure-server.yml
 
