@@ -196,7 +196,7 @@ jobs:
           command: |
             ansible-inventory -v --list -i .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
-            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/create_eks_cluster.yml    
+            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/create-eks-cluster.yml    
       - run:
           name: Sleep 25 mins waiting for EKS Custer Ready!.
           no_output_timeout: 50m
@@ -226,7 +226,7 @@ jobs:
           command: |
             ansible-inventory -v --list -i .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
-            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/create_eks_deploy.yml  
+            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/create-eks-deploy.yml  
   
   create_service_eks_cluster:
     docker:
@@ -249,7 +249,7 @@ jobs:
           command: |
             ansible-inventory -v --list -i .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt
-            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/create_eks_service.yml  
+            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/create-eks-service.yml  
 
   delete_eks_cluster:
     docker:
