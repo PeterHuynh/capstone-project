@@ -174,7 +174,7 @@ jobs:
           command: |            
             instance_id=(`aws ec2 describe-instances --filters   "Name=tag:Name,Values=qa-ec2-cicd" --query Reservations[*].Instances[*].InstanceId --output text --region us-west-2 
 
-            aws ec2 associate-iam-instance-profile --instance-id ${instnace_id} --iam-instance-profile Name=phuynh-cicd --region us-west-2
+            aws ec2 associate-iam-instance-profile --instance-id ${instance_id} --iam-instance-profile Name=phuynh-cicd --region us-west-2
 
   create_eks_cluster:
     docker:
@@ -274,11 +274,14 @@ workflows:
       - create_ec2_deployment_server          
       - configure_ec2_deployment_server:
           requires: [create_ec2_deployment_server]
-      - attach_role_to_ec2_server
+      - attach_role_to_ec2_server:
+          requires: [create_ec2_deployment_server]
       - create_eks_cluster:
           requires: [attach_role_to_ec2_server]
-      - create_delpoyment_eks_cluster
-      - create_service_eks_cluster
+      - create_delpoyment_eks_cluster:
+          requires: [create_eks_cluster]
+      - create_service_eks_cluster:
+          requires: [create_ec2_deployment_server]
       #- delete_ec2_deployment_server          
       #- delete_eks_cluster
       #- delete_aws_infrastructure
