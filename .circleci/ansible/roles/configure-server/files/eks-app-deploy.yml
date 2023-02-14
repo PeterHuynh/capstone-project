@@ -1,0 +1,25 @@
+kind: Deployment
+metadata:
+  name: ph-app-deployment
+spec:
+  selector:
+    matchLabels:
+      app: ph-app-project
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+
+  template:
+    metadata:
+      labels:
+        app: ph-app-project
+    spec:
+      containers:
+      - name: ph-app-project
+        image: peterhuynh99/projectapp:v1.0.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80

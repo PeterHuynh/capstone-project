@@ -1,0 +1,33 @@
+---
+- name: "update apt packages."
+  become: yes
+  apt:
+    update_cache: yes 
+
+- name: "upgrade packages"
+  become: yes
+  apt:
+    upgrade: yes
+
+- name: remove dependencies that are no longer required
+  become: yes
+  apt:
+    autoremove: yes 
+
+- name: "Install uzip package"
+  become: yes
+  apt:
+    name: ["unzip"]
+    state: latest
+    update_cache: yes
+
+- name: create a deployment
+  command: kubectl apply -f app-deploy.yml
+ 
+- name: update deployment with new pods if image updated in docker hub
+  command: kubectl rollout restart deployment.apps/ph-app-deployment
+
+   
+    
+
+...

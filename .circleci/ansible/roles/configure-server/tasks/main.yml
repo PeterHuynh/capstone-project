@@ -21,6 +21,18 @@
     state: latest
     update_cache: yes
 
+- name: "copy eks deployment file"
+  become: true
+  copy:
+    src: eks-app-deploy.yml
+    dest: /home/ubuntu/
+
+- name: "copy eks app service file"
+  become: true
+  copy:
+    src: eks-app-service.yml
+    dest: /home/ubuntu
+
 - name: "Install AWS CLI"
   shell: |
     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -35,5 +47,9 @@
     curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
     sudo mv /tmp/eksctl /usr/local/bin
     eksctl version
+
+    curl -fsSL https://get.docker.com -o get-docker.sh
+    sudo sh ./get-docker.sh
+    docker --version
 
 ...
