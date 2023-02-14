@@ -271,17 +271,17 @@ workflows:
       # - create_aws_infrastructure
       # - create_ec2_deployment_server:
       #     requires: [create_aws_infrastructure]      
-      #- create_ec2_deployment_server          
+      # - create_ec2_deployment_server          
       - attach_role_to_ec2_server
       #   requires: [create_ec2_deployment_server]
-      # - configure_ec2_deployment_server:
-      #     requires: [attach_role_to_ec2_server]      
-      # - create_eks_cluster:
-      #     requires: [attach_role_to_ec2_server]
-      # - create_delpoyment_eks_cluster:
-      #     requires: [create_eks_cluster]
-      # - create_service_eks_cluster:
-      #     requires: [create_delpoyment_eks_cluster]
+      - configure_ec2_deployment_server:
+          requires: [attach_role_to_ec2_server]      
+      - create_eks_cluster:
+          requires: [configure_ec2_deployment_server]
+      - create_delpoyment_eks_cluster:
+          requires: [create_eks_cluster]
+      - create_service_eks_cluster:
+          requires: [create_delpoyment_eks_cluster]
       #- delete_ec2_deployment_server          
       #- delete_eks_cluster
       #- delete_aws_infrastructure
