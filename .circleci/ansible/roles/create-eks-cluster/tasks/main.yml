@@ -24,6 +24,6 @@
 - name: "Create EKS Cluster"
   shell: |
     eksctl create cluster --name ph-cf-eks --region us-west-2 --node-type t3.small --nodes-min 2 --nodes-max 2
-    
+    echo "Created EKS."
 
 ...

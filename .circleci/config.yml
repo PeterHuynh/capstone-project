@@ -109,11 +109,11 @@ jobs:
             aws cloudformation create-stack --stack-name ph-cf-ec2-server --template-body file://.circleci/files/server.yml --parameters file://.circleci/files/server_parameters.json --region us-west-2
 
       - run:
-          name: Sleep 2 mins waiting for EC2 Boot
-          no_output_timeout: 15m
+          name: Sleep x minutes waiting for EC2 Boot
+          no_output_timeout: 10m
           command: |
             date
-            sleep 5m
+            sleep 4m
             echo "Wake Up!."
 
       - run:
@@ -121,7 +121,7 @@ jobs:
           command: |
             echo "" > inventory.txt
             echo [ec2] > inventory.txt            
-            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=qa-server-cicd2" --output text >> .circleci/ansible/inventory.txt --region us-west-2 
+            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=qa-server-cicd" --output text >> .circleci/ansible/inventory.txt --region us-west-2 
 
       - run:
           name: Check inventory file content
@@ -172,7 +172,7 @@ jobs:
       - run: 
           name: Get instance id and attach pre-defined role 
           command: |            
-            instance_id=`aws ec2 describe-instances --filters   "Name=tag:Name,Values=qa-server-cicd2" --query Reservations[*].Instances[*].InstanceId --output text --region us-west-2`
+            instance_id=`aws ec2 describe-instances --filters   "Name=tag:Name,Values=qa-server-cicd" --query Reservations[*].Instances[*].InstanceId --output text --region us-west-2`
 
             aws ec2 associate-iam-instance-profile --instance-id ${instance_id} --iam-instance-profile Name=phuynh-cicd --region us-west-2
 
@@ -192,18 +192,26 @@ jobs:
             pip install awscli --upgrade
             ansible --version
       - run:
-          name: Create EKS Cluster
-          command: |
-            ansible-inventory -v --list -i .circleci/ansible/inventory.txt
-            cat .circleci/ansible/inventory.txt
-            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/create-eks-cluster.yml    
-      - run:
-          name: Sleep 25 mins waiting for EKS Custer Ready!.
+          name: Create Eks Cluster
           no_output_timeout: 50m
           command: |
+            ansible-inventory -v --list -i .circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt            
+            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/create-eks-cluster.yml
             date
+            echo "Sleep 25 minutes"
             sleep 25m
-            echo "Wake Up!. Eks should be ready now!."
+            echo "Wake Up!"
+            
+      
+      # No need this run as above ansible waits for esk completion
+      # - run:
+      #     name: Sleep 25 mins waiting for EKS Custer Ready!.
+          # no_output_timeout: 50m
+          # command: |
+          #   date
+          #   sleep 25m
+          #   echo "Wake Up!"
   
   create_delpoyment_eks_cluster:
     docker:
@@ -282,6 +290,8 @@ workflows:
           requires: [create_eks_cluster]
       - create_service_eks_cluster:
           requires: [create_delpoyment_eks_cluster]
+      # - test_application:
+      #     requires: [create_service_eks_cluster]
       #- delete_ec2_deployment_server          
       #- delete_eks_cluster
       #- delete_aws_infrastructure

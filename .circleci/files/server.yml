@@ -42,4 +42,4 @@ Resources:
         Fn::ImportValue: !Sub "${EnvironmentName}-PUB1-SN" 
       Tags:
         - Key: Name
-          Value: qa-server-cicd2
+          Value: qa-server-cicd
