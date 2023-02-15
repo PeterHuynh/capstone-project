@@ -64,7 +64,7 @@ jobs:
           name: Build and Push Docker Image
           command: |
             cat /etc/os-release                                 
-            TAG="v1.0.0"
+            TAG="v1.0.1"
             docker build -t peterhuynh99/projectapp:${TAG} .
             docker login --username ${DOCKERHUB_USERNAME} --password ${DOCKERHUB_PASSWORD}
             docker push peterhuynh99/projectapp:${TAG}
@@ -82,6 +82,13 @@ jobs:
           name: Create AWS Infrastructure
           command: |
             aws cloudformation create-stack --stack-name ph-cf-network-infra --template-body file://cfn_network_infra.yml --parameters file://cfn_network_infra_parameters.json  --region us-west-2             
+      - run:
+          name: Sleep 20m waiting for VPC,IGW,subnets create
+          no_output_timeout: 30m
+          command: |
+            date
+            sleep 20m
+            echo "Wake Up!."
 
   delete_aws_infrastructure:
     docker:
@@ -109,11 +116,11 @@ jobs:
             aws cloudformation create-stack --stack-name ph-cf-ec2-server --template-body file://.circleci/files/server.yml --parameters file://.circleci/files/server_parameters.json --region us-west-2
 
       - run:
-          name: Sleep x minutes waiting for EC2 Boot
+          name: Sleep 5 minutes waiting for EC2 Boot
           no_output_timeout: 10m
           command: |
             date
-            sleep 4m
+            sleep 5m
             echo "Wake Up!."
 
       - run:
@@ -199,12 +206,34 @@ jobs:
             ansible-inventory -v --list -i .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt            
             ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/create-eks-cluster.yml
-            # echo "Sleep 25 minutes"
-            # sleep 25m
-            # date            
-            # echo "Wake Up!"
-            
+            echo "Sleep 20 minutes waiting for cluster create"
+            sleep 20m
+            date            
+            echo "Wake Up!"            
   
+  persist_deployment_server:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: install tar gzip packages
+          command: |
+            yum -y install tar gzip
+      - run:
+          name: Retrieve EC2 server ip and add to ansible inventory
+          command: |
+            echo "" > inventory.txt
+            echo [ec2] > inventory.txt            
+            aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:Name,Values=qa-server-cicd" --output text >> .circleci/ansible/inventory.txt --region us-west-2 
+      - run:
+          name: Check inventory file content
+          command: cat .circleci/ansible/inventory.txt      
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
+
   create_delpoyment_eks_cluster:
     docker:
       - image: python:3.11-rc-alpine
@@ -262,23 +291,23 @@ jobs:
 workflows:
   default:
     jobs:
-      # - build
-      # - create_image:
-      #     requires: [build]
+      - build
+      - create_image:
+          requires: [build]
       # - create_aws_infrastructure
       # - create_ec2_deployment_server:
-      #     requires: [create_aws_infrastructure]      
-      # - create_ec2_deployment_server          
+      #     requires: [create_aws_infrastructure]            
       # - attach_role_to_ec2_server:
       #    requires: [create_ec2_deployment_server]
       # - configure_ec2_deployment_server:
       #     requires: [attach_role_to_ec2_server]      
       # - create_eks_cluster:
       #     requires: [configure_ec2_deployment_server]
-      # - create_delpoyment_eks_cluster:
-      #     requires: [create_eks_cluster]
-      # - create_service_eks_cluster:
-      #     requires: [create_delpoyment_eks_cluster]      
+      - persist_deployment_server
+      - create_delpoyment_eks_cluster:
+          requires: [persist_deployment_server]
+      - create_service_eks_cluster:
+          requires: [create_delpoyment_eks_cluster]      
       #- delete_ec2_deployment_server          
       #- delete_eks_cluster
       #- delete_aws_infrastructure

@@ -1,3 +1,4 @@
+apiVersion: apps/v1 
 kind: Deployment
 metadata:
   name: ph-app-deployment
@@ -19,7 +20,7 @@ spec:
     spec:
       containers:
       - name: ph-app-project
-        image: peterhuynh99/projectapp:v1.0.0
+        image: peterhuynh99/projectapp:v1.0.1
         imagePullPolicy: Always
         ports:
         - containerPort: 80
