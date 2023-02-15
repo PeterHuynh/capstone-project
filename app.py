@@ -26,7 +26,7 @@ def scale(payload):
 
 @app.route("/")
 def home():
-    html = "<h3>Hello, My name is Peter Huynh</h3>"
+    html = "<h3>Hello, My name is Peter Huynh - App Version 2</h3>"
     return html.format(format)
 
 @app.route("/predict", methods=['POST'])

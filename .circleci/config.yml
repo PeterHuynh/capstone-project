@@ -303,7 +303,8 @@ workflows:
       #     requires: [attach_role_to_ec2_server]      
       # - create_eks_cluster:
       #     requires: [configure_ec2_deployment_server]
-      - persist_deployment_server
+      - persist_deployment_server:
+          requires: [create_image]
       - create_delpoyment_eks_cluster:
           requires: [persist_deployment_server]
       - create_service_eks_cluster:

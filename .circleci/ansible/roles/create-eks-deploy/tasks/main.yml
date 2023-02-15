@@ -21,6 +21,12 @@
     state: latest
     update_cache: yes
 
+- name: "Delete previous deployment"
+  command: kubectl delete deploy ph-app-deployment
+
+- name: "Delete previous service"
+  command: kubectl delete service ph-app-service
+
 - name: create a deployment
   command: kubectl apply -f eks-app-deploy.yml
  
