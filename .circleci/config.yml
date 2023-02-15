@@ -278,6 +278,28 @@ jobs:
             cat .circleci/ansible/inventory.txt
             ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/create-eks-service.yml  
 
+  delete_previous_eks_deployment:
+    docker:
+      - image: python:3.11-rc-alpine
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["5a:ef:53:88:90:cb:f4:43:bc:61:9f:db:64:b5:62:c5"]
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Install ansible dependencies
+          command: |
+            apk add --update ansible
+            pip install awscli --upgrade
+            ansible --version   
+      - run:
+          name: Delete Previous EKS Deployment
+          command: |
+            ansible-inventory -v --list -i .circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt
+            ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/delete-eks-deploy.yml
+
   delete_eks_cluster:
     docker:
       - image: amazon/aws-cli
@@ -305,8 +327,10 @@ workflows:
       #     requires: [configure_ec2_deployment_server]
       - persist_deployment_server:
           requires: [create_image]
-      - create_delpoyment_eks_cluster:
+      - delete_previous_eks_deployment:
           requires: [persist_deployment_server]
+      - create_delpoyment_eks_cluster:
+          requires: [delete_previous_eks_deployment]
       - create_service_eks_cluster:
           requires: [create_delpoyment_eks_cluster]      
       #- delete_ec2_deployment_server          

@@ -1,0 +1,8 @@
+---
+- name: "Delete previous deployment"
+  command: kubectl delete deploy ph-app-deployment
+
+- name: "Delete previous service"
+  command: kubectl delete service ph-app-service
+
+...
