@@ -22,7 +22,9 @@
     update_cache: yes
 
 - name: create a service
-  command: kubectl apply -f eks-app-service.yml
+  command: |
+    sleep 2m
+    kubectl apply -f eks-app-service.yml
 
 
 ...
