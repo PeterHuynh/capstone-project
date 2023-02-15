@@ -22,7 +22,7 @@
     update_cache: yes
 
 - name: create a deployment
-  command: kubectl apply -f app-deploy.yml
+  command: kubectl apply -f eks-app-deploy.yml
  
 - name: update deployment with new pods if image updated in docker hub
   command: kubectl rollout restart deployment.apps/ph-app-deployment

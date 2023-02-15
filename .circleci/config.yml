@@ -195,23 +195,15 @@ jobs:
           name: Create Eks Cluster
           no_output_timeout: 50m
           command: |
+            date
             ansible-inventory -v --list -i .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt            
             ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/create-eks-cluster.yml
-            date
-            echo "Sleep 25 minutes"
-            sleep 25m
-            echo "Wake Up!"
+            # echo "Sleep 25 minutes"
+            # sleep 25m
+            # date            
+            # echo "Wake Up!"
             
-      
-      # No need this run as above ansible waits for esk completion
-      # - run:
-      #     name: Sleep 25 mins waiting for EKS Custer Ready!.
-          # no_output_timeout: 50m
-          # command: |
-          #   date
-          #   sleep 25m
-          #   echo "Wake Up!"
   
   create_delpoyment_eks_cluster:
     docker:
@@ -228,7 +220,6 @@ jobs:
             apk add --update ansible
             pip install awscli --upgrade
             ansible --version   
-
       - run:
           name: Create EKS Deployment
           command: |
@@ -251,7 +242,6 @@ jobs:
             apk add --update ansible
             pip install awscli --upgrade
             ansible --version   
-
       - run:
           name: Create EKS Service
           command: |
@@ -269,7 +259,6 @@ jobs:
           command: |
             aws cloudformation delete-stack --stack-name eksctl-ph-cf-eks-cluster --region us-west-2   
 
-
 workflows:
   default:
     jobs:
@@ -279,19 +268,17 @@ workflows:
       # - create_aws_infrastructure
       # - create_ec2_deployment_server:
       #     requires: [create_aws_infrastructure]      
-      - create_ec2_deployment_server          
-      - attach_role_to_ec2_server:
-         requires: [create_ec2_deployment_server]
-      - configure_ec2_deployment_server:
-          requires: [attach_role_to_ec2_server]      
-      - create_eks_cluster:
-          requires: [configure_ec2_deployment_server]
-      - create_delpoyment_eks_cluster:
-          requires: [create_eks_cluster]
-      - create_service_eks_cluster:
-          requires: [create_delpoyment_eks_cluster]
-      # - test_application:
-      #     requires: [create_service_eks_cluster]
+      # - create_ec2_deployment_server          
+      # - attach_role_to_ec2_server:
+      #    requires: [create_ec2_deployment_server]
+      # - configure_ec2_deployment_server:
+      #     requires: [attach_role_to_ec2_server]      
+      # - create_eks_cluster:
+      #     requires: [configure_ec2_deployment_server]
+      # - create_delpoyment_eks_cluster:
+      #     requires: [create_eks_cluster]
+      # - create_service_eks_cluster:
+      #     requires: [create_delpoyment_eks_cluster]      
       #- delete_ec2_deployment_server          
       #- delete_eks_cluster
       #- delete_aws_infrastructure
