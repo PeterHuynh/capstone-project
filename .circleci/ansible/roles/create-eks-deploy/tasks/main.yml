@@ -21,6 +21,18 @@
     state: latest
     update_cache: yes
 
+- name: "copy eks deployment file"
+  become: true
+  copy:
+    src: eks-app-deploy.yml
+    dest: /home/ubuntu/
+
+- name: "copy eks app service file"
+  become: true
+  copy:
+    src: eks-app-service.yml
+    dest: /home/ubuntu/
+
 - name: create a deployment
   command: kubectl apply -f eks-app-deploy.yml
  
