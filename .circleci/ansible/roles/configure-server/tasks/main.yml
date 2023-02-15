@@ -31,7 +31,7 @@
   become: true
   copy:
     src: eks-app-service.yml
-    dest: /home/ubuntu
+    dest: /home/ubuntu/
 
 - name: "Install AWS CLI"
   shell: |
