@@ -21,10 +21,12 @@
     state: latest
     update_cache: yes
 
+- name: Pause for 3 minutes to create service
+  ansible.builtin.pause:
+    minutes: 3
+    
 - name: create a service
-  command: |
-    sleep 2m
-    kubectl apply -f eks-app-service.yml
+  command: kubectl apply -f eks-app-service.yml
 
 
 ...
